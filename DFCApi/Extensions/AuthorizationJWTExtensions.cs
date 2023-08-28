@@ -32,6 +32,8 @@ namespace API.Extensions
                     ValidateAudience = true,
                     ValidIssuer = appSettings.Issuer,
                     ValidAudience = appSettings.Audience,
+                    RequireExpirationTime = true,
+                    ClockSkew = TimeSpan.Zero
                 };
             });
 
