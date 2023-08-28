@@ -17,7 +17,7 @@ namespace API.Services
             _appSettings = appSettings.Value;
         }
 
-        public async Task<string> GenerateToken(Login user)
+        public async Task<string> GenerateToken(Login login)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
@@ -29,7 +29,7 @@ namespace API.Services
             {
                 Subject = new ClaimsIdentity(new List<Claim>
                 {
-                    new Claim(ClaimTypes.NameIdentifier, user.Username),
+                    new Claim(ClaimTypes.NameIdentifier, login.Username),
                 }),
                 Issuer = _appSettings.Issuer,
                 Audience = _appSettings.Audience,
