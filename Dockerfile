@@ -7,14 +7,14 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
-COPY ["DFC.csproj", "DFC/"]
-RUN dotnet restore "DFC.csproj"
+COPY ["DFCApi/DFCApi.csproj", "DFCApi/"]
+RUN dotnet restore "DFCApi/DFCApi.csproj"
 COPY . .
-WORKDIR "/src/DFC"
-RUN dotnet build "DFC.csproj" -c Release -o /app/build
+WORKDIR "/src/DFCApi"
+RUN dotnet build "DFCApi.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "DFC.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "DFCApi.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
