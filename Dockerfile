@@ -7,8 +7,8 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
-COPY ["DFC/DFC.csproj", "DFC/"]
-RUN dotnet restore "DFC/DFC.csproj"
+COPY ["DFC.csproj", "DFC/"]
+RUN dotnet restore "DFC.csproj"
 COPY . .
 WORKDIR "/src/DFC"
 RUN dotnet build "DFC.csproj" -c Release -o /app/build
