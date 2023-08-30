@@ -10,10 +10,12 @@
             Name = name;
             Level = level;
             Captain = captain;
+            Active = true;
         }
 
         public string Name { get; private set; }
         public int Level { get; private set; }
         public bool Captain { get; private set; }
+        public bool Active { get; private set; }
     }
 }
