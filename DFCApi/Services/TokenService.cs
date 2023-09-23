@@ -1,5 +1,6 @@
 ﻿using API.Models;
 using API.Services.Interface;
+using DFCApi.Models.Settings;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -10,14 +11,14 @@ namespace API.Services
 {
     public class TokenService : ITokenService
     {
-        private readonly AppSettings _appSettings;
+        private readonly TokenSettings _appSettings;
 
-        public TokenService(IOptions<AppSettings> appSettings)
+        public TokenService(IOptions<TokenSettings> appSettings)
         {
             _appSettings = appSettings.Value;
         }
 
-        public async Task<string> GenerateToken(Login login)
+        public async Task<string> GenerateToken(User user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
@@ -29,7 +30,7 @@ namespace API.Services
             {
                 Subject = new ClaimsIdentity(new List<Claim>
                 {
-                    new Claim(ClaimTypes.NameIdentifier, login.Username),
+                    new Claim(ClaimTypes.NameIdentifier, user.Id),
                 }),
                 Issuer = _appSettings.Issuer,
                 Audience = _appSettings.Audience,

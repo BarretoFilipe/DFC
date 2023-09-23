@@ -8,13 +8,13 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
-    [Route("v1/account")]
+    [Route("api/v1/account")]
     public class AccountController : BaseController
     {
-        private readonly ILoginRepository _userRepository;
+        private readonly IUserRepository _userRepository;
         private readonly ITokenService _tokenService;
 
-        public AccountController(ITokenService tokenService, ILoginRepository userRepository)
+        public AccountController(ITokenService tokenService, IUserRepository userRepository)
         {
             _tokenService = tokenService;
             _userRepository = userRepository;
@@ -25,15 +25,24 @@ namespace API.Controllers
         [Route("login")]
         public async Task<ActionResult<UserLoginViewModel>> Login([FromBody] UserLoginCommand userLogin)
         {
-            var user = await _userRepository.Authenticate(userLogin);
+            var result = await _userRepository.Authenticate(userLogin);
 
-            if (user == null)
+            if (result.Succeeded)
+            {
+                var user = await _userRepository.getByUserName(userLogin.UserName);
+                var token = await _tokenService.GenerateToken(user);
+                var userLoginViewModel = new UserLoginViewModel(token);
+
+                return Ok(userLoginViewModel);
+            }
+            if (result.IsLockedOut)
+            {
+                return NotFound(new { message = "User account locked out" });
+            }
+            else
+            {
                 return NotFound(new { message = "User or password is invalid" });
-
-            var token = await _tokenService.GenerateToken(user);
-            var userLoginViewModel = new UserLoginViewModel(token);
-
-            return Ok(userLoginViewModel);
+            }
         }
     }
 }

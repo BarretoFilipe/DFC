@@ -9,7 +9,7 @@ namespace API.Extensions
     {
         public static WebApplicationBuilder AddDependencyInjection(this WebApplicationBuilder builder)
         {
-            builder.Services.AddScoped<ILoginRepository, LoginRepository>();
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IPlayerRepository, PlayerRepository>();
 
             builder.Services.AddTransient<ITokenService, TokenService>();

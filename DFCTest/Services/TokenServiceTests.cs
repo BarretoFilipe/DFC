@@ -1,5 +1,6 @@
 ﻿using API.Models;
 using API.Services;
+using DFCApi.Models.Settings;
 using FluentAssertions;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -10,7 +11,7 @@ namespace DFCTest.Services
 {
     public class TokenServiceTests
     {
-        private AppSettings _appSettings => new()
+        private TokenSettings _appSettings => new()
         {
             Secret = "9B)(/&%$BAD620#$%&/674AF23F356D",
             ExpiresInHours = 5,
@@ -23,8 +24,8 @@ namespace DFCTest.Services
             var options = Options.Create(_appSettings);
             var tokenService = new TokenService(options);
 
-            Login login = new("anna", "test");
-            return await tokenService.GenerateToken(login);
+            User user = new();
+            return await tokenService.GenerateToken(user);
         }
 
         [Fact]

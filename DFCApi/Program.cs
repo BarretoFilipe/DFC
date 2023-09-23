@@ -1,4 +1,9 @@
 using API.Extensions;
+using API.Models;
+using DFCApi.Persistences;
+using DFCApi.Persistences.Seeders;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Server.API.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,6 +18,16 @@ builder.Services.AddCors();
 builder.Services.AddAuthentication();
 builder.Services.AddAuthorizationJWT(builder.Configuration);
 
+builder.Services.AddDbContext<DFCContext>(option =>
+    option.UseNpgsql(builder.Configuration.GetConnectionString("DFCDatabase"))
+);
+
+builder.Services.AddIdentityCore<User>(options => options.SignIn.RequireConfirmedAccount = true)
+    .AddEntityFrameworkStores<DFCContext>()
+    .AddSignInManager<SignInManager<User>>();
+
+builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+
 builder.AddDependencyInjection();
 
 var app = builder.Build();
@@ -21,8 +36,17 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseMigrationsEndPoint();
+}
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+
+    var context = services.GetRequiredService<DFCContext>();
+    var userManager = services.GetRequiredService<UserManager<User>>();
+    context.Database.EnsureCreated();
+    DatabaseSeeder.Initialize(context, userManager);
 }
 
 app.UseHttpsRedirection();

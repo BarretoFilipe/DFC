@@ -12,7 +12,7 @@ namespace Server.API.Extensions
                 c.SwaggerDoc("v1", new OpenApiInfo
                 {
                     Version = "v1",
-                    Title = "Dynamik Footbal Club API",
+                    Title = "Dynamik Football Club API",
                     Description = "by Filipe Barreto"
                 });
 

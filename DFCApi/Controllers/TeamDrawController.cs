@@ -4,8 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
-    [Route("v1/teamdraw")]
-    public class TeamDrawController : AuthorizeController
+    [Route("api/v1/teamdraw")]
+    public class TeamDrawController : BaseController
     {
         private readonly IDrawTeamService _drawTeamService;
 

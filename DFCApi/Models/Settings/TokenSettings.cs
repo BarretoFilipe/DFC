@@ -1,6 +1,6 @@
-﻿namespace API.Models
+﻿namespace DFCApi.Models.Settings
 {
-    public class AppSettings
+    public class TokenSettings
     {
         public string Secret { get; set; } = string.Empty;
         public int ExpiresInHours { get; set; } = int.MinValue;
